@@ -155,15 +155,17 @@ class SiteComprasSessoesUtilizadoresLocalStorage {
 
   getTotaisCesto() {
     var sessaoAtual = this.getDados();
-    var cestoAtual = sessaoAtual.cesto;
-    var totalNumerario = 0;
-    var totalArtigos = 0;
+    if (sessaoAtual) {
+      var cestoAtual = sessaoAtual.cesto;
+      var totalNumerario = 0;
+      var totalArtigos = 0;
 
-    if (sessaoAtual && cestoAtual) {
-      cestoAtual.forEach(function (item) {
-        totalNumerario += item.preco * item.quantidade;
-        totalArtigos += item.quantidade;
-      });
+      if (cestoAtual) {
+        cestoAtual.forEach(function (item) {
+          totalNumerario += item.preco * item.quantidade;
+          totalArtigos += item.quantidade;
+        });
+      }
     }
 
     return {
