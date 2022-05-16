@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Site do Rui</title>
+    <link href="global.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <h1>o site do Rui</h1>
+    <table>
+      <tr>
+        <td class="navegacao">
+          <a href="index.html"><< voltar atrás</a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <form class="inscricao">
+            <table>
+              <tr class="fNome">
+                <td>Nome</td>
+                <td>
+                  <input type="text" id="fNome" name="fNome" />
+                  <span class="msg-erro"></span>
+                </td>
+              </tr>
+              <tr class="fEmail">
+                <td>Email</td>
+                <td>
+                  <input type="text" id="fEmail" name="fEmail" />
+                  <span class="msg-erro"></span>
+                </td>
+              </tr>
+              <tr class="fPassword1">
+                <td>Password</td>
+                <td>
+                  <input type="password" id="fPassword1" name="fPassword1" />
+                  <span class="msg-erro"></span>
+                </td>
+              </tr>
+              <tr class="fPassword2">
+                <td>Repita a password</td>
+                <td>
+                  <input type="password" id="fPassword2" name="fPassword2" />
+                  <span class="msg-erro"></span>
+                </td>
+              </tr>
+              <tr class="fMorada">
+                <td>Morada</td>
+                <td>
+                  <textarea rows="6" id="fMorada" name="fMorada"></textarea>
+                  <span class="msg-erro"></span>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <button type="button" onclick="inscreverUtilizador()">Criar utilizador</button>
+                </td>
+              </tr>
+            </table>
+          </form>
+        </td>
+      </tr>
+    </table>
+
+    <hr />
+    <ul>
+      <li>
+        Usei o &lt;button&gt; para que o utilizador veja uma accao e clique
+      </li>
+      <li>
+        Usei o &lt;form&gt; para delimitar o formulário
+      </li>
+      <li>
+        Usei o &lt;input&gt; para que o utilizador escreva valor numa linha
+      </li>
+      <li>
+        Usei o &lt;textarea&gt; para que o utilizador escreva valor em várias linhas
+      </li>
+    </ul>
+
+    <script src="site.js"></script>
+    <script>
+      // objecto principal
+      var site = new SiteCompras();
+
+      // accao do utilizador quando envia o formulario
+      function inscreverUtilizador() {
+        // tenta criar um novo utilizador
+        var novoUtilizador = site.criarUtilizador({
+          nome: "fNome",
+          email: "fEmail",
+          password1: "fPassword1",
+          password2: "fPassword2",
+          morada: "fMorada"
+        });
+
+        if (novoUtilizador.length === 0) {
+          // utilizador criado com sucesso
+          document.querySelector("form.inscricao").classList.remove("error");
+          window.location.href = "login.html";
+        } else {
+          // erro ao criar utilizador, limpar os campos de erro
+          resetErros();
+          // mostrar os erros
+          novoUtilizador.forEach(function (erro) {
+            var input = document.querySelector('[name="' + erro.campo + '"]');
+            var tr = document.querySelector("." + erro.campo);
+            tr.classList.add("erro");
+            input.nextElementSibling.innerHTML = erro.mensagem;
+          });
+        }
+      }
+
+      function resetErros() {
+        // remove a class "erro" de todos os campos span, input e tr com class "erro"
+        document.querySelectorAll("span,input,tr.erro").forEach(function (el) {
+          el.classList.remove("erro");
+        });
+        // limpa o conteudo dos spans
+        document.querySelectorAll("input,textarea").forEach(function (el) {
+          el.nextElementSibling.innerHTML = "";
+        });
+      }
+    </script>
+  </body>
+</html>

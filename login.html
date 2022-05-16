@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Site do Rui</title>
+    <link href="global.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <h1>o site do Rui</h1>
+    <table>
+      <tr>
+        <td class="navegacao">
+          <a href="index.html"><< voltar atrás</a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <form class="login" id="fLogin">
+            <table>
+              <tr>
+                  <td>Nome</td>
+                <td>
+                  <input type="text" id="fNome" name="fNome" />
+                </td>
+              </tr>
+              <tr>
+                  <td>Email</td>
+                <td>
+                  <input type="text" id="fEmail" name="fEmail" />
+                </td>
+              </tr>
+              <tr>
+                  <td>Password</td>
+                <td>
+                  <input type="password" id="fPassword" name="fPassword" />
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <button type="button" onclick="fazerLogin()">Aceder</button>
+                </td>
+              </tr>
+            </table>
+          </form>
+        </td>
+      </tr>
+    </table>
+
+    <hr />
+    <ul>
+      <li>Usei &lt;form&gt; para o agrupar o formulário</li>
+      <li>Usei &lt;button&gt; para criar uma accao para o utilizador</li>
+      <li>
+        Retornei "false" no formulário "onsubmit" para não refrescar a pagina
+        depois de submeter o formulário, em caso de erro
+      </li>
+    </ul>
+
+    <script src="site.js"></script>
+    <script>
+      // objecto principal
+      var site = new SiteCompras();
+
+      // accao do utilizador quando envia o formulario
+      function fazerLogin() {
+        // tenta fazer login com os dados dados do formulario
+        var novoUtilizador = site.fazerLogin({
+          nome: "fNome", email: "fEmail", password: "fPassword"
+        });
+
+        if (novoUtilizador) {
+          // redirecciona para o carrinho.html
+          document.querySelector("form.login").classList.remove("erro");
+          window.location.href = "carrinho.html";
+        } else {
+          // mostra mensagem de erro em todos os campos para nao mostrar qual o campo errado
+          document.querySelector("form.login").classList.add("erro");
+        }
+      }
+    </script>
+  </body>
+</html>

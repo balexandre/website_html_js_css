@@ -1,0 +1,114 @@
+body {
+    font-size: 1rem;
+    font-family: sans-serif;
+    font-weight: BOLD;
+    background-color: #BADA55;
+}
+
+form {
+    margin-top: 20px;
+}
+form input, form textarea {
+    border: 2px solid black;
+    font-size: 14px;
+    padding: 2px;
+}
+table td:first-child {
+    width: 150px;
+}
+
+/* utilitarios */
+.ocultar {
+    display: none;
+}
+
+/* erros */
+form.erro td,
+form span.erro,
+form tr.erro {
+    color: maroon;
+}
+form tr.erro input,
+form tr.erro textarea,
+form input.erro,
+form textarea.erro {
+    border: 2px dashed maroon;
+}
+form .msg-erro {
+    color: maroon;
+    font-weight: normal;
+    font-size: 12px;
+}
+
+form div {
+    margin-bottom: 10px;
+}
+
+form button {
+    margin: 10px;
+    padding: 10px;
+}
+
+/* navegacao */
+table {
+    width: 100%;
+}
+.navegacao {
+    padding: 20px;
+    background-color: #d4e2a9;
+}
+
+/* carrinho */
+.carrinho ul {
+    padding-left: 0;
+    list-style-type: none;
+}
+
+.carrinho ul li {
+    display: inline-block;
+    margin: 0 30px 80px;
+}
+
+.carrinho img {
+    margin-bottom: 10px;
+}
+
+.carrinho .titulo {
+    font-size: 2em;
+}
+
+.carrinho input[type="number"] {
+    width: 40px;
+}
+
+.carrinho .item {
+    height: 170px;
+}
+
+
+.carrinho .preco {
+    margin: 10px 0;
+    font-size: 20px;
+}
+
+.carrinho small {
+    font-size:10px;
+    color: darkgreen;
+    display: block;
+}
+
+/* checkout */
+
+.checkout td {
+    border-top: 1px solid black;
+    padding: 10px 5px;
+}
+.checkout .total {
+    background-color: azure;
+}
+.tablePayments {
+    width: 300px;
+}
+.custosAdicionais {
+    font-size: 12px;
+}

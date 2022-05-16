@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site do Rui</title>
+    <link href="global.css" rel="stylesheet" />
+</head>
+
+<body>
+    <h1>o site do Rui</h1>
+    <table>
+        <tr>
+            <td class="navegacao">
+                <a href="index.html">
+                    << voltar atrás</a> |
+                    <a href="carrinho.html">carrinho</a>
+            </td>
+        </tr>
+        <tr class="sessao-valida ocultar">
+            <td>
+                <p>Aqui tem o seu cesto:</p>
+            </td>
+        </tr>
+        <tr class="sessao-nao-valida ocultar">
+            <td>
+                <p>Para fazer checkout, por favor <a href="login.html">faca o login</a></p>
+            </td>
+        </tr>
+    </table>
+    <table class="checkout ocultar">
+        <tr>
+            <td>Descricao da compra</td>
+            <td class="descricao">
+                O cesto tem <span class="artigos">0</span> artigos num total de <span
+            class="numerario">0</span>
+            </td>
+        </tr>
+        <tr>
+            <td>Total</td>
+            <td class="totalNumerario"></td>
+        </tr>
+        <tr>
+            <td>Tipo de pagamento</td>
+            <td class="pagamento">
+                <select id="fPagamento" onchange="mudaPagamento()">
+                    <option value="visa">VISA</option>
+                    <option value="banco">Transferencia bancária</option>
+                    <option value="paypal">PayPal</option>
+                </select>
+                <div class="visa">
+                    <h3>Visa</h3>
+                    <table class="tablePayments">
+                        <tr>
+                            <td>Numero cartão</td>
+                            <td><input name="visaNumero" id="visaNumero" maxlength="16" /></td>
+                        </tr>
+                        <tr>
+                            <td>Validade</td>
+                            <td><select name="visaMes" id="visaMes"></select> <select name="visaAno" id="visaAno"></select></td>
+                        </tr>
+                        <tr>
+                            <td>Código CVV</td>
+                            <td><input name="visaNumero" id="visaNumero" maxlength="3" /></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="banco ocultar">
+                    <h3>Transferencia bancária</h3>
+                    Iban: <input name="bancoIban" maxlength="16" />
+                </div>
+                <div class="paypal ocultar">
+                    <h3>PayPal</h3>
+                    Faca login na <a href="https://www.paypal.com/signin" target="_blank">pagina to PayPal</a>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Modalidade de entrega</td>
+            <td class="entrega">
+                <select id="fEntraga" onchange="mudaEntrega()">
+                    <option value="normal">Correio Normal</option>
+                    <option value="expresso">Correio Expresso (+20€)</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Morada de entrega</td>
+            <td><pre class="moradaEntrega"></pre></td>
+        </tr>
+        <tr>
+            <td>Pais de destino</td>
+            <td class="destino">
+                <select id="fDestino" onchange="mudaDestino()">
+                    <option value="pt">Portugal</option>
+                    <option value="es">Espanha (+10€)</option>
+                    <option value="fr">Franca (+10€)</option>
+                    <option value="uk">Reino Unido (+10€)</option>
+                    <option value="us">Estados Unidos (+10€)</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="total">
+            <td>Total a pagar</td>
+            <td><span class="totalPagar"></span> <span class="custosAdicionais ocultar"></span></td>
+        </tr>
+        <tr>
+            <td colspan="2"><button type="button" onclick="encomendar()">Encomendar</button></td>
+        </tr>
+    </table>
+
+    <hr />
+    <ul>
+      <li>
+        Usei o &lt;pre&gt; para formatar a morada uma vez que pode ter varias linhas
+      </li>
+      <li>
+        Usei o &lt;select&gt; para criar dropdowns com opcoes
+    </li>
+    <li>
+      Usei o &lt;option&gt; para que o utilizador seleccione opcao no dropdown
+    </li>
+      <li>
+        Usei o &lt;div&gt; para delimitar conteudo de opcao a mostrar
+      </li>
+    </ul>
+
+    <script src="site.js"></script>
+    <script type="text/javascript">
+        // variavel para ter custos adicionais no checkout
+        var custoAdicional = 0;
+        // objecto principal
+        var site = new SiteCompras();
+        // verifica se é utilizador registado
+        var nomeUtilizador = site.verificarUtilizadorExistente();
+
+        if(nomeUtilizador) {
+            // preenche morada
+            var moradaUtilizador = site.getMoradaUtilizador();
+            document.querySelector(".moradaEntrega").innerHTML = moradaUtilizador;
+            // mostra opcoes
+            document.querySelector(".checkout").classList.remove("ocultar");
+            document.querySelector(".sessao-valida").classList.remove("ocultar");
+        } else {
+            // mostra que tem de fazer login
+            document.querySelector(".sessao-nao-valida").classList.remove("ocultar");
+        }
+        
+        function mostrarTotais() {
+            var total = site.getTotalDoCesto();
+            var totalArtigos = total.artigos;
+            var totalNumerario = Intl.NumberFormat("pt-PT", {
+                style: "currency",
+                currency: "eur",
+            }).format(total.numerario / 100);
+
+            document.querySelector(".descricao span.artigos").innerHTML = totalArtigos;
+            document.querySelector(".descricao span.numerario").innerHTML = totalNumerario;
+
+            document.querySelector(".totalNumerario").innerHTML = totalNumerario;
+        }
+        function mudaPagamento() {
+            var pagamento = document.getElementById("fPagamento").value;
+            // reset
+            document.querySelector(".visa").classList.add("ocultar");
+            document.querySelector(".banco").classList.add("ocultar");
+            document.querySelector(".paypal").classList.add("ocultar");
+            // mostrar
+            document.querySelector(`.${pagamento}`).classList.remove("ocultar");
+        }
+        function mudaEntrega() {
+            var modoEntrega = document.getElementById("fEntraga").value;
+            if (modoEntrega === "expresso") {
+                custoAdicional += 2000;
+            } else {
+                custoAdicional -= 2000;
+            }
+            calculaTotalPagar();
+        }
+        function mudaDestino() {
+            var destinacao = document.getElementById("fDestino").value;
+            if(destinacao !== "pt") {
+                custoAdicional += 1000;
+            } else {
+                custoAdicional -= 1000;
+            }
+            calculaTotalPagar();
+        }
+        function calculaTotalPagar() {
+            var total = site.getTotalDoCesto();
+            var totalPagar = total.numerario + custoAdicional;
+            document.querySelector(".totalPagar").innerHTML = Intl.NumberFormat("pt-PT", {
+                style: "currency",
+                currency: "eur",
+            }).format(totalPagar / 100);
+
+            if(custoAdicional > 0) {
+                var custoAdicionalFormatado = Intl.NumberFormat("pt-PT", {
+                    style: "currency",
+                    currency: "eur",
+                }).format(custoAdicional / 100);
+                document.querySelector(".custosAdicionais").innerHTML = `(contem ${custoAdicionalFormatado} de custos adicionais)`;
+                document.querySelector(".custosAdicionais").classList.remove("ocultar");
+            } else {
+                document.querySelector(".custosAdicionais").classList.add("ocultar");
+            }
+        }
+        function adicionaMesAno() {
+            // mes
+            var visaMes = document.getElementById("visaMes");
+            var formatador = new Intl.DateTimeFormat('pt', { month: 'long' });
+
+            for (var i = 1; i <= 12; i++) {
+                var mes = formatador.format(new Date(2022, i-1, 1))
+                visaMes.appendChild(new Option(`${i} - ${mes}`, i));
+            }
+            // ano
+            var visaAno = document.getElementById("visaAno");
+            var ano = new Date();
+            for (var i = ano.getFullYear(); i <= ano.getFullYear() + 10; i++) {
+                visaAno.appendChild(new Option(i, i));
+            }
+        }
+        function encomendar() {
+            alert('Pronto a encomendar...');
+        }
+
+        adicionaMesAno();
+        mostrarTotais();
+        calculaTotalPagar();
+    </script>
+</body>
+
+</html>

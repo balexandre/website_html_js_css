@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Site do Rui</title>
+  <link href="global.css" rel="stylesheet" />
+</head>
+
+<body>
+  <h1>o site do Rui</h1>
+  <table>
+    <tr>
+      <td class="navegacao">
+        <a href="index.html">
+          << voltar atrás</a> |
+          <a href="checkout.html">checkout</a>
+      </td>
+    </tr>
+    <tr class="sessao-nao-valida ocultar">
+        <td>
+            <p>Para adicionar produtos ao cesto, por favor <a href="login.html">faca o login</a></p>
+        </td>
+    </tr>
+    <tr class="sessao-valida ocultar">
+      <td class="carrinho">
+        <p>Olá <span class="nome"></span>, vamos às compras!?</p>
+        <p class="total">O cesto tem <span class="artigos">0</span> artigos num total de <span
+            class="numerario">0</span> | <a href="#" onclick="limparCesto()">limpar cesto</a></p>
+      </td>
+    </tr>
+  </table>
+  <table>
+    <tr>
+      <td class="carrinho">
+        <ul></ul>
+      </td>
+    </tr>
+  </table>
+
+  <script src="site.js"></script>
+  <script type="text/javascript">
+    // objecto principal
+    var site = new SiteCompras();
+
+    function mostrarTotais() {
+      var total = site.getTotalDoCesto();
+      var totalArtigos = total.artigos;
+      var totalNumerario = Intl.NumberFormat("pt-PT", {
+        style: "currency",
+        currency: "eur",
+      }).format(total.numerario / 100);
+
+      document.querySelector(".carrinho .total span.artigos").innerHTML = totalArtigos;
+      document.querySelector(".carrinho .total span.numerario").innerHTML = totalNumerario;
+    }
+    function adicionaAoCesto(elm) {
+      var id = elm.getAttribute("data-id");
+      var qtd = elm.previousElementSibling.value;
+      if(!site.adicionarAoCesto(id, qtd)) {
+        // retornou "null", ou seja, nao podemos adicionar mais
+        elm.setAttribute("disabled", "disabled");
+      }
+
+      mostrarTotais();
+    }
+    function criarProdutos() {
+      var produtos = site.getProdutosDisponiveis();
+      var placeholder = document.querySelector(".carrinho ul");
+      produtos.forEach((produto) => {
+        var li = document.createElement("li");
+        li.innerHTML = `
+                    <div class="item" id="item_${produto.id}">
+                        <img src="${produto.imagem}" />
+                        <div class="titulo">${produto.nome} <small>${produto.stock} unidade${produto.stock === 1 ? '' : 's'} em stock</small></div>
+                        <div class="preco">${Intl.NumberFormat("pt-PT", { currency: "eur", style: "currency" }).format(produto.preco / 100)}</div>
+                        <div>
+                            <input type="number" value="1" max="${produto.stock}" min="1" />
+                            <button type="button" data-id="${produto.id}" onclick="adicionaAoCesto(this)"> + </button>
+                        </div>
+                    </div>
+                `;
+        placeholder.appendChild(li);
+      });
+    }
+    function limparCesto() {
+      site.limparCesto();
+      mostrarTotais();
+      resetButtons();
+    }
+    function resetButtons() {
+      document.querySelectorAll("button").forEach(button => {
+        button.removeAttribute("disabled");
+      });
+    }
+
+    mostrarTotais();
+    criarProdutos();
+    resetButtons();
+
+    // verifica se é utilizador registado
+    var nomeUtilizador = site.verificarUtilizadorExistente();
+    if (nomeUtilizador) {
+      document.querySelector(".nome").innerHTML = nomeUtilizador;
+      // mostrar mensagem d checkout e cesto
+      document.querySelector(".sessao-valida").classList.remove("ocultar");
+    } else {
+      document.querySelectorAll("button").forEach(button => {
+        button.setAttribute("disabled", "disabled");
+      });
+      // mostrar texto para fazer login
+      document.querySelector(".sessao-nao-valida").classList.remove("ocultar");
+    }
+  </script>
+</body>
+
+</html>

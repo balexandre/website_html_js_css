@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Site do Rui</title>
+    <link href="global.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <h1>o site do Rui</h1>
+    <table>
+      <tr>
+        <td class="navegacao">
+          <span class="login ocultar"><a href="login.html">login</a></span
+          ><span class="logout ocultar"><a href="index.html" onclick="terminarSessao()">logout</a></span> |
+          <a href="inscricao.html">inscricao</a> |
+          <a href="carrinho.html">carrinho</a> |
+          <a href="checkout.html">checkout</a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h2 class="visitado ocultar">
+            Olá <span class="nome">Anonimo</span>
+          </h2>
+          <h2 class="novo ocultar">Bem vindo</h2>
+        </td>
+      </tr>
+    </table>
+
+    <hr />
+    <ul>
+      <li>Usei "html:5 > TAB" para comecar este documento (VSCode)</li>
+      <li>Usei &lt;h1&gt; para o titulo</li>
+      <li>Usei &lt;h2&gt; para a mensagem e o nome do utilizador</li>
+      <li>Usei &lt;a&gt; para criar links de navegacao</li>
+      <li>
+        Usei &lt;span&gt; para criar um placeholder afim de preencher com o nome
+      </li>
+      <li>
+        Usei &lt;table&gt;(tabela) &lt;tr&gt; (linha) e &lt;td&gt; (coluna) para
+        criar uma tabela de maneira a ter uma estrutura
+      </li>
+    </ul>
+
+    <script src="site.js"></script>
+    <script>
+      // objecto principal
+      var site = new SiteCompras();
+      // verifica se é utilizador registado
+      var nomeUtilizador = site.verificarUtilizadorExistente();
+
+      if (nomeUtilizador) {
+        // existe um utilizador, mostra o nome
+        document.querySelector(".logout").classList.remove("ocultar");
+        document.querySelector(".visitado").classList.remove("ocultar");
+        document.querySelector(".nome").innerHTML = nomeUtilizador;
+      } else {
+        // não existe um utilizador
+        document.querySelector(".novo").classList.remove("ocultar");
+        document.querySelector(".login").classList.remove("ocultar");
+      }
+
+      function terminarSessao() {
+        if(confirm("Tem a certeza que quer terminar a sua sessão?")) {
+          site.terminarSessao();
+        }
+      }
+    </script>
+  </body>
+</html>
